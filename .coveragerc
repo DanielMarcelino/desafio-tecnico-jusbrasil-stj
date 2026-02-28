@@ -1,0 +1,11 @@
+[run]
+omit =
+    .tox/*
+    **/testes/*
+    venv/*
+    .venv/*
+
+[report]
+exclude_lines =
+    from *
+    import *
