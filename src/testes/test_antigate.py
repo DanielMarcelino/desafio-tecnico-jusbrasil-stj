@@ -8,7 +8,7 @@ import requests
 
 from configuracoes import FLARESOLVERR_HOST
 from antigate import TurnstileResolverClient, FalhaSolucaoTurnstileException
-from models import SessaoSTJ
+from models import SolucaoAntigate
 
 
 @lru_cache()
@@ -21,10 +21,10 @@ def obtem_fixture(path: str) -> dict:
 
 class TestTurnstileResolverClient(TestCase):
     def setUp(self):
-        self.url_pagina_desafio = 'https://tribunal.com.br'
+        self.url_pagina_captcha = 'https://tribunal.com.br'
         self.timeout = 60
         self.resolvedor = TurnstileResolverClient(
-            url_pagina_desafio=self.url_pagina_desafio,
+            url_pagina_captcha=self.url_pagina_captcha,
             timeout=self.timeout
         )
 
@@ -44,7 +44,7 @@ class TestTurnstileResolverClient(TestCase):
             headers={'Content-Type': 'application/json'},
             json={
                 'cmd': 'request.get',
-                'url': self.url_pagina_desafio,
+                'url': self.url_pagina_captcha,
                 'maxTimeout': 60000,
                 'returnOnlyCookies': True
             }
@@ -64,7 +64,7 @@ class TestTurnstileResolverClient(TestCase):
             headers={'Content-Type': 'application/json'},
             json={
                 'cmd': 'request.get',
-                'url': self.url_pagina_desafio,
+                'url': self.url_pagina_captcha,
                 'maxTimeout': 60000,
                 'returnOnlyCookies': True,
                 'proxy': {'url': proxy_url}
@@ -72,13 +72,13 @@ class TestTurnstileResolverClient(TestCase):
         )
 
     def test_resolver__quando_sucesso_ao_solucionar_captcha_retorna_objeto_com_dados_da_sessao(self):
-        """Deve retornar uma instância da classe ```models.SessaoSTJ``` com os dados da sessão
+        """Deve retornar uma instância da classe ```models.SolucaoAntigate``` com os dados da sessão
         de acesso ao recurso do tribunal."""
         self.mock_response.json.return_value = obtem_fixture('solucao_turnstile_sucesso.json')
         with mock.patch('antigate.requests.post', new=self.mock_post):
             sessao_retornada = self.resolvedor.resolver()
 
-        self.assertIsInstance(sessao_retornada, SessaoSTJ)
+        self.assertIsInstance(sessao_retornada, SolucaoAntigate)
         self.assertEqual(
             'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36',
             sessao_retornada.user_agent

@@ -38,15 +38,15 @@ class BaseModelPersistente(BaseModel, ABC):
         return cls(**json.loads(arquivo))
 
 
-class SessaoSTJ(BaseModelPersistente):
-    """Representa uma sessão autenticada no STJ.
+class SolucaoAntigate(BaseModelPersistente):
+    """Representa uma sessão autenticada através da solução de um CAPTCHA.
 
     Armazena os dados necessários para manter e verificar
-    a validade de uma sessão HTTP com o STJ, com suporte
+    a validade de uma sulução de CAPTCHA, com suporte
     a persistência via Storage.
     """
 
-    PATH_ARQUIVO: ClassVar[str] = "dados_sessao.json"
+    PATH_ARQUIVO: ClassVar[str] = "dados_solucao_turnstile.json"
 
     user_agent: str
     cookies: str
@@ -56,7 +56,7 @@ class SessaoSTJ(BaseModelPersistente):
     def expirou(self) -> bool:
         """Verifica se a sessão está expirada.
 
-        Compara o timestamp atual com o tempo de vida da sessão.
+        Compara o timestamp atual com o tempo de vida da solução.
 
         Returns:
             True se a sessão expirou, False caso contrário.

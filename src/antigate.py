@@ -1,7 +1,7 @@
 import requests
 
 import configuracoes
-from models import SessaoSTJ
+from models import SolucaoAntigate
 
 
 class FalhaSolucaoTurnstileException(Exception):
@@ -18,7 +18,7 @@ class TurnstileResolverClient:
 
     Encapsula a comunicação com o serviço FlareSolverr para obter cookies e
     user-agent válidos após a resolução automática do desafio Turnstile, retornando um objeto
-    do tipo models.SessaoSTJ com dados da sessão para uso nas requisições subsequentes ao STJ.
+    do tipo models.SolucaoAntigate com dados da sessão para uso nas requisições subsequentes.
 
     Attributes:
         URL_FLARESOLVER (str): Endpoint base da API do FlareSolverr, construído a
@@ -27,19 +27,19 @@ class TurnstileResolverClient:
 
     URL_FLARESOLVER = f'{configuracoes.FLARESOLVERR_HOST}/v1'
 
-    def __init__(self, url_pagina_desafio: str, timeout: int = 120) -> None:
+    def __init__(self, url_pagina_captcha: str, timeout: int = 120) -> None:
         """Inicializa o cliente com a URL do desafio e o tempo limite da requisição.
 
         Args:
-            url_pagina_desafio (str): URL da página protegida pelo Turnstile que
+            url_pagina_captcha (str): URL da página protegida pelo Turnstile que
                 o FlareSolverr deve acessar e resolver.
             timeout (int): Tempo máximo, em segundos, aguardado pelo FlareSolverr
                 para resolver o desafio. Padrão: 120 segundos.
         """
-        self._url_pagina_desafio = url_pagina_desafio
+        self._url_pagina_captcha = url_pagina_captcha
         self._timeout = timeout
 
-    def resolver(self) -> SessaoSTJ:
+    def resolver(self) -> SolucaoAntigate:
         """Envia a requisição ao FlareSolverr e retorna uma sessão autenticada.
 
         Monta o payload com o comando ``request.get``, incluindo proxy quando
@@ -47,7 +47,7 @@ class TurnstileResolverClient:
         aos métodos auxiliares.
 
         Returns:
-            SessaoSTJ: Objeto de sessão contendo user-agent, cookies e tempo de
+            SolucaoAntigate: Objeto de sessão contendo user-agent, cookies e tempo de
                 vida extraídos da solução retornada pelo FlareSolverr.
 
         Raises:
@@ -57,7 +57,7 @@ class TurnstileResolverClient:
         headers = {"Content-Type": "application/json"}
         data = {
             'cmd': 'request.get',
-            'url': self._url_pagina_desafio,
+            'url': self._url_pagina_captcha,
             'maxTimeout': self._timeout * 1000,  # Transforma segundos em milissegundos
             'returnOnlyCookies': True
         }
@@ -68,19 +68,19 @@ class TurnstileResolverClient:
         self._verificar_resposta(response)
         return self._criar_model_sessao(response)
 
-    def _criar_model_sessao(self, response: requests.Response) -> SessaoSTJ:
-        """Constrói um ``models.SessaoSTJ`` a partir da resposta bem-sucedida do FlareSolverr.
+    def _criar_model_sessao(self, response: requests.Response) -> SolucaoAntigate:
+        """Constrói um ``models.SolucaoAntigate`` a partir da resposta bem-sucedida do FlareSolverr.
 
         Extrai o user-agent e os cookies da chave ``solution`` do JSON, serializa
         os cookies no formato ``nome=valor`` separados por ponto-e-vírgula e
         determina o menor TTL entre todos os cookies para definir o tempo de vida
-        da sessão.
+        da solução.
 
         Args:
             response (requests.Response): Resposta HTTP bem-sucedida do FlareSolverr.
 
         Returns:
-            SessaoSTJ: Modelo de sessão preenchido com user-agent, cookies serializados
+            SolucaoAntigate: Modelo de solução preenchido com user-agent, cookies serializados
                 e o menor tempo de expiração encontrado entre os cookies.
         """
         json = response.json()
@@ -93,7 +93,7 @@ class TurnstileResolverClient:
             if 'expiry' in cookie and cookie['expiry'] < menor_ttl:
                 menor_ttl = cookie['expiry']
 
-        return SessaoSTJ(
+        return SolucaoAntigate(
             user_agent=user_agent,
             cookies='; '.join(sorted(cookies_str)),
             tempo_de_vida=menor_ttl
