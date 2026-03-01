@@ -1,0 +1,130 @@
+{
+    "status": "ok",
+    "message": "Challenge solved!",
+    "solution": {
+        "url": "https://processo.stj.jus.br/processo/pesquisa/?aplicacao=processos",
+        "status": 200,
+        "cookies": [
+            {
+                "domain": ".stj.jus.br",
+                "expiry": 1772329391,
+                "httpOnly": false,
+                "name": "_hjSession_3545185",
+                "path": "/",
+                "sameSite": "None",
+                "secure": true,
+                "value": "eyJpZCI6ImViYTM2MzkyLTc2MzYtNGQzZC1hMzdlLTVjZDhkMzgyNzJmMSIsImMiOjE3NzIzMjc1OTE2NTAsInMiOjAsInIiOjAsInNiIjowLCJzciI6MCwic2UiOjAsImZzIjoxLCJzcCI6MH0="
+            },
+            {
+                "domain": ".stj.jus.br",
+                "expiry": 1806887591,
+                "httpOnly": false,
+                "name": "_ga",
+                "path": "/",
+                "sameSite": "Lax",
+                "secure": false,
+                "value": "GA1.1.443706025.1772327591"
+            },
+            {
+                "domain": ".stj.jus.br",
+                "expiry": 1772413991,
+                "httpOnly": false,
+                "name": "_gid",
+                "path": "/",
+                "sameSite": "Lax",
+                "secure": false,
+                "value": "GA1.3.964211319.1772327591"
+            },
+            {
+                "domain": ".processo.stj.jus.br",
+                "httpOnly": false,
+                "name": "TS01e0d983",
+                "path": "/",
+                "sameSite": "Lax",
+                "secure": false,
+                "value": "016a5b383380d13f34d73081ce32880e214f3a9203f2761333f422c671044a0351c20849f36ca3a0103d955cb34f46983d0a7553dc"
+            },
+            {
+                "domain": ".stj.jus.br",
+                "expiry": 1772327651,
+                "httpOnly": false,
+                "name": "_gat_UA-179972319-1",
+                "path": "/",
+                "sameSite": "Lax",
+                "secure": false,
+                "value": "1"
+            },
+            {
+                "domain": "processo.stj.jus.br",
+                "httpOnly": false,
+                "name": "TS5d516d15027",
+                "path": "/",
+                "sameSite": "Lax",
+                "secure": false,
+                "value": "0845fc7f4bab200035557f6b0dd3a79b73601662a98d4bfa56515cb18739e2463f2d29c09eb9e05d080c42c4f4113000dea7232fe678c6ac0b090c19f999c4933aed94d2e6bb2ffce1e9c91e29565cf5b98603a40d38d47005f67d4d02955e79"
+            },
+            {
+                "domain": ".stj.jus.br",
+                "expiry": 1806887591,
+                "httpOnly": false,
+                "name": "_ga_F31N0L6Z6D",
+                "path": "/",
+                "sameSite": "Lax",
+                "secure": false,
+                "value": "GS2.1.s1772327591$o1$g0$t1772327591$j60$l0$h0"
+            },
+            {
+                "domain": ".stj.jus.br",
+                "expiry": 1803863591,
+                "httpOnly": true,
+                "name": "cf_clearance",
+                "path": "/",
+                "sameSite": "None",
+                "secure": true,
+                "value": "Ei4wyGOL36OUs04A7RJIboKWJJO43yRODyHuXPBbWY0-1772327591-1.2.1.1-yz_39hbpU6NhqB_n9fQiQAwol4AGK4zjG6SbHlfjzemgTiuyA5_Z6qiR74NJWLmXbMC1pYcrJOQXOjiJ03efp5HEDn.wsX2SBYQsw.kr4jnFrsAgtoG5Zn2JCBTvF3_GiltR5AHe0uzbu3ZX6xfJQXTmVZf5M6hfJoVZM0MMDfmBs5UFAv3a7P00GQhfWpGWKmanEzUpDtHmkf4g93v.s5VJhZ_UMeWqV3iEaBvrBQLdLj5uu8WHglXCOhLyBuax"
+            },
+            {
+                "domain": "processo.stj.jus.br",
+                "expiry": 1772329390,
+                "httpOnly": true,
+                "name": "rpCookieInsert",
+                "path": "/",
+                "sameSite": "Lax",
+                "secure": true,
+                "value": "4026535434.36895.0000"
+            },
+            {
+                "domain": "processo.stj.jus.br",
+                "httpOnly": false,
+                "name": "JSESSIONID",
+                "path": "/processo",
+                "sameSite": "Lax",
+                "secure": false,
+                "value": "7pxKEj9M3NwlVpnVOhx3vqSVJIesd_9K5rqEJtjB.svlp-jboss-04"
+            },
+            {
+                "domain": "processo.stj.jus.br",
+                "httpOnly": false,
+                "name": "TS01528471",
+                "path": "/processo",
+                "sameSite": "Lax",
+                "secure": false,
+                "value": "016a5b383380d13f34d73081ce32880e214f3a9203f2761333f422c671044a0351c20849f36ca3a0103d955cb34f46983d0a7553dc"
+            },
+            {
+                "domain": ".stj.jus.br",
+                "expiry": 1803863591,
+                "httpOnly": false,
+                "name": "_hjSessionUser_3545185",
+                "path": "/",
+                "sameSite": "None",
+                "secure": true,
+                "value": "eyJpZCI6IjQyZTcwNzdiLTIyYWMtNWNlNi1hNTliLTQxOTFkY2ZiYjIwZCIsImNyZWF0ZWQiOjE3NzIzMjc1OTE2NDgsImV4aXN0aW5nIjpmYWxzZX0="
+            }
+        ],
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+    },
+    "startTimestamp": 1772327580186,
+    "endTimestamp": 1772327593209,
+    "version": "3.4.6"
+}

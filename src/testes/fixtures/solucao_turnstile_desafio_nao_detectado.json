@@ -1,0 +1,54 @@
+{
+    "status": "ok",
+    "message": "Challenge not detected!",
+    "solution": {
+        "url": "https://www.google.com/?zx=1772376597463&no_sw_cr=1",
+        "status": 200,
+        "cookies": [
+            {
+                "domain": ".google.com",
+                "expiry": 1788187796,
+                "httpOnly": true,
+                "name": "NID",
+                "path": "/",
+                "sameSite": "None",
+                "secure": true,
+                "value": "529=aOXztRDDESIueAH2pBHJKUXhLLiZZVixk5fw9FBRF7urziEgxnkVLz4jMwRmGTljLaWh4-k2TKCIuKdEjjdZISR_Inmo3ywPN2igislR66vYZzsnO6c9fsjA_uWEbgC7Zn_VC4iJy5Ma2PRK2SZsrfIK74YX82Htbvq6XrNoxtUdEeKrNHltC6GFnK3i3_gk1gPhOy6WeLGAu55tBCPDS7Tym6L0ROpdAdhEi3-Lc64"
+            },
+            {
+                "domain": ".google.com",
+                "expiry": 1787928596,
+                "httpOnly": true,
+                "name": "AEC",
+                "path": "/",
+                "sameSite": "Lax",
+                "secure": true,
+                "value": "AaJma5sfXW87FgT9mngm2ClpO2_4W79oDAJbmsg5xM1MKZzUotY0vWT1p34"
+            },
+            {
+                "domain": ".google.com",
+                "expiry": 1787928596,
+                "httpOnly": true,
+                "name": "__Secure-BUCKET",
+                "path": "/",
+                "sameSite": "Lax",
+                "secure": true,
+                "value": "COoB"
+            },
+            {
+                "domain": ".google.com",
+                "expiry": 1772376896,
+                "httpOnly": false,
+                "name": "__Secure-STRP",
+                "path": "/",
+                "sameSite": "Strict",
+                "secure": true,
+                "value": "AD6DogtsqcZA9Nwx0Jhisjy2VqaJVuVRJddomFffQaEyJTPXorUs4SnOh4MHOr2gwG7ATk6jbisFtoBcYZGr5qa0EknoGZGbWOFR"
+            }
+        ],
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+    },
+    "startTimestamp": 1772376595192,
+    "endTimestamp": 1772376598094,
+    "version": "3.4.6"
+}
