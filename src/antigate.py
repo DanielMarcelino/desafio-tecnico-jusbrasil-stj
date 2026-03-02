@@ -12,7 +12,7 @@ class FalhaSolucaoTurnstileException(Exception):
     """
 
 
-class TurnstileResolverClient:
+class TurnstileSolverClient:
     """Cliente do FlareSolverr (https://github.com/FlareSolverr/FlareSolverr), resolvedor do
     CAPTCHA Cloudflare Turnstile.
 

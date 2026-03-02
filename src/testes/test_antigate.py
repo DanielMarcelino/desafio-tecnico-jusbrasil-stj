@@ -7,7 +7,7 @@ from unittest import TestCase, mock
 import requests
 
 from configuracoes import FLARESOLVERR_HOST
-from antigate import TurnstileResolverClient, FalhaSolucaoTurnstileException
+from antigate import TurnstileSolverClient, FalhaSolucaoTurnstileException
 from models import SolucaoAntigate
 
 
@@ -19,11 +19,11 @@ def obtem_fixture(path: str) -> dict:
     return json.loads(conteudo_fixture)
 
 
-class TestTurnstileResolverClient(TestCase):
+class TestTurnstileSolverClient(TestCase):
     def setUp(self):
         self.url_pagina_captcha = 'https://tribunal.com.br'
         self.timeout = 60
-        self.resolvedor = TurnstileResolverClient(
+        self.resolvedor = TurnstileSolverClient(
             url_pagina_captcha=self.url_pagina_captcha,
             timeout=self.timeout
         )
