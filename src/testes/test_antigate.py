@@ -53,10 +53,9 @@ class TestTurnstileSolverClient(TestCase):
     def test_resolver__quando_proxy_estiver_configurado_deve_inlcuir_na_paylodad_de_acesso_ao_flaresolverr(self):
         """Quando o Proxy estiver configurado deve inlcluí-lo na payload."""
         self.mock_response.json.return_value = obtem_fixture('solucao_turnstile_sucesso.json')
-        proxy_url = 'http://proxy.url:3128'
 
         with mock.patch('antigate.requests.post', new=self.mock_post), \
-             mock.patch('antigate.configuracoes.PROXY_URL', new=proxy_url):
+             mock.patch('antigate.os.environ', new={'HTTPS_PROXY': 'http://proxy.url:3128'}):
             self.resolvedor.resolver()
 
         self.mock_post.assert_called_once_with(
@@ -67,7 +66,7 @@ class TestTurnstileSolverClient(TestCase):
                 'url': self.url_pagina_captcha,
                 'maxTimeout': 60000,
                 'returnOnlyCookies': True,
-                'proxy': {'url': proxy_url}
+                'proxy': {'url': 'http://proxy.url:3128'}
             }
         )
 
@@ -75,6 +74,7 @@ class TestTurnstileSolverClient(TestCase):
         """Deve retornar uma instância da classe ```models.SolucaoAntigate``` com os dados da sessão
         de acesso ao recurso do tribunal."""
         self.mock_response.json.return_value = obtem_fixture('solucao_turnstile_sucesso.json')
+
         with mock.patch('antigate.requests.post', new=self.mock_post):
             sessao_retornada = self.resolvedor.resolver()
 

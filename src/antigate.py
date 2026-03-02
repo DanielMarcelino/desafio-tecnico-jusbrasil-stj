@@ -1,6 +1,7 @@
+import os
 import requests
 
-import configuracoes
+from configuracoes import FLARESOLVERR_HOST
 from models import SolucaoAntigate
 
 
@@ -25,7 +26,7 @@ class TurnstileSolverClient:
             partir da variável de configuração ``FLARESOLVERR_HOST``.
     """
 
-    URL_FLARESOLVER = f'{configuracoes.FLARESOLVERR_HOST}/v1'
+    URL_FLARESOLVERR = f'{FLARESOLVERR_HOST}/v1'
 
     def __init__(self, url_pagina_captcha: str, timeout: int = 120) -> None:
         """Inicializa o cliente com a URL do desafio e o tempo limite da requisição.
@@ -61,10 +62,11 @@ class TurnstileSolverClient:
             'maxTimeout': self._timeout * 1000,  # Transforma segundos em milissegundos
             'returnOnlyCookies': True
         }
-        if configuracoes.PROXY_URL:
-            data.update({'proxy': {'url': configuracoes.PROXY_URL}})
 
-        response = requests.post(url=self.URL_FLARESOLVER, headers=headers, json=data)
+        if https_proxy := os.environ.get('HTTPS_PROXY'):
+            data.update({'proxy': {'url': os.environ.get('HTTPS_PROXY', https_proxy)}})
+
+        response = requests.post(url=self.URL_FLARESOLVERR, headers=headers, json=data)
         self._verificar_resposta(response)
         return self._criar_model_sessao(response)
 
