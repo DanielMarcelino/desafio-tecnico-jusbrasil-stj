@@ -74,8 +74,10 @@ class TestTurnstileSolverClient(TestCase):
         """Deve retornar uma instância da classe ```models.SolucaoAntigate``` com os dados da sessão
         de acesso ao recurso do tribunal."""
         self.mock_response.json.return_value = obtem_fixture('solucao_turnstile_sucesso.json')
+        timestamp_fixo = 0
 
-        with mock.patch('antigate.requests.post', new=self.mock_post):
+        with mock.patch('antigate.requests.post', new=self.mock_post), \
+             mock.patch('antigate.time', return_value=timestamp_fixo):
             sessao_retornada = self.resolvedor.resolver()
 
         self.assertIsInstance(sessao_retornada, SolucaoAntigate)
@@ -107,7 +109,7 @@ class TestTurnstileSolverClient(TestCase):
             'rpCookieInsert=4026535434.36895.0000',
             sessao_retornada.cookies
         )
-        self.assertEqual(1772327651, sessao_retornada.tempo_de_vida)
+        self.assertEqual(1800, sessao_retornada.tempo_de_vida)
 
     def test_resolver__quando_captcha_nao_encontrado_lanca_excecao(self):
         """Quando o FlareSolverr não encontrar o CAPTCHA na url informada, deve lançar

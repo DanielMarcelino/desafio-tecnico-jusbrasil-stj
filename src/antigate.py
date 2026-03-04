@@ -1,5 +1,6 @@
 import os
 import requests
+from time import time
 
 from configuracoes import FLARESOLVERR_HOST
 from models import SolucaoAntigate
@@ -87,18 +88,16 @@ class TurnstileSolverClient:
         """
         json = response.json()
         user_agent = json['solution']['userAgent']
-        cookies_str = []
-        menor_ttl = float('inf')
+        cookies_map = map(lambda c: f'{c["name"]}={c["value"]}', json['solution']['cookies'])
+        cookies_str = '; '.join(sorted(cookies_map))
 
-        for cookie in json['solution']['cookies']:
-            cookies_str.append(f'{cookie["name"]}={cookie["value"]}')
-            if 'expiry' in cookie and cookie['expiry'] < menor_ttl:
-                menor_ttl = cookie['expiry']
+        timestamp_atual = int(time())
+        ttl = timestamp_atual + 1800  # 30 min
 
         return SolucaoAntigate(
             user_agent=user_agent,
-            cookies='; '.join(sorted(cookies_str)),
-            tempo_de_vida=menor_ttl
+            cookies=cookies_str,
+            tempo_de_vida=ttl
         )
 
     def _verificar_resposta(self, response: requests.Response) -> None:
