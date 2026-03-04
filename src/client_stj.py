@@ -61,7 +61,7 @@ class ClientSTJ:
         self._storage: Storage = storage
         self._numero_processo = numero_processo.strip()
         self._parser = Parser()
-        self._html_primeira_pagina: bytes
+        self._html_primeira_pagina: str
         self._total_movimentos: int | None
         self._solucao_turnstile: SolucaoAntigate | None = None
         self._requests_session: requests.Session | None = None
@@ -94,7 +94,7 @@ class ClientSTJ:
         """
         parametros_busca = self._obter_parametros_busca_processo()
         resposta = self._realizar_requisicao(method='POST', url=self.URL_BASE, data=parametros_busca)
-        self._html_primeira_pagina = resposta.content
+        self._html_primeira_pagina = resposta.text
         self._total_movimentos = self._parser.extrair_quantidade_total_movimentos(resposta.content)
         return self._parser.extrair_dados_processo(self._html_primeira_pagina)
 
@@ -124,7 +124,7 @@ class ClientSTJ:
         for pagina in range(2, quantidade_paginas + 1):
             parametros_paginacao = self._obter_parametros_proxima_pagina(num_pagina=pagina)
             resposta = self._realizar_requisicao(method='POST', url=self.URL_BASE, data=parametros_paginacao)
-            yield self._parser.extrair_movimentos(resposta.content)
+            yield self._parser.extrair_movimentos(resposta.text)
 
     def _realizar_requisicao(self, method: str, url: str, data: dict) -> requests.Response:
         """Executa uma requisição HTTP com retry automático em caso de status 403.

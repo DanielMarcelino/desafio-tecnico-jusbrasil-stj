@@ -11,10 +11,10 @@ from models import DadosProcesso, DetalhesProcesso, Parte, Advogado, Peticao, Pa
 
 
 @lru_cache()
-def obtem_fixture(path: str) -> bytes:
+def obtem_fixture(path: str) -> str:
     p = Path('src/testes/fixtures').joinpath(path)
-    with p.open('rb') as f:
-        conteudo_fixture: bytes = f.read()
+    with p.open('r') as f:
+        conteudo_fixture: str = f.read()
     return conteudo_fixture
 
 

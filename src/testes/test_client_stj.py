@@ -320,7 +320,7 @@ class TestClientSTJ(TestCase):
 
     # Testes buscar_processo
     def test_buscar_processo__extrai_dados_com_parser_e_retorna(self):
-        mock_response = mock.create_autospec(spec=requests.Response, instance=True, content=b'<html>')
+        mock_response = mock.create_autospec(spec=requests.Response, instance=True, text='<html>')
         dados_processo = mock.create_autospec(spec=DadosProcesso, instance=True)
         self.cliente_stj._parser.extrair_dados_processo.return_value = dados_processo
 
@@ -330,13 +330,13 @@ class TestClientSTJ(TestCase):
         self.assertIs(dados_processo, dados_retornados)
 
     def test_buscar_processo__define_atribuntos_instancia(self):
-        mock_response = mock.create_autospec(spec=requests.Response, instance=True, content=b'<html>')
+        mock_response = mock.create_autospec(spec=requests.Response, instance=True, text='<html>')
         self.cliente_stj._parser.extrair_quantidade_total_movimentos.return_value = 123
 
         with mock.patch.object(ClientSTJ, '_realizar_requisicao', return_value=mock_response):
             self.cliente_stj.buscar_processo()
 
-        self.assertEqual(b'<html>', self.cliente_stj._html_primeira_pagina)
+        self.assertEqual('<html>', self.cliente_stj._html_primeira_pagina)
         self.assertEqual(123, self.cliente_stj._total_movimentos)
 
     def test_buscar_processo__executa_realizar_requisicao_com_parametros_esperados_para_cada_num_processo(self):
@@ -366,7 +366,7 @@ class TestClientSTJ(TestCase):
 
     # Testes buscar_paginas_movimentos
     def test_buscar_paginas_movimentos__retorna_gerador_de_listas_com_movimentos(self):
-        self.cliente_stj._html_primeira_pagina = b'html'
+        self.cliente_stj._html_primeira_pagina = 'html'
         self.cliente_stj._total_movimentos = 150
         self.cliente_stj._parser.extrair_quantidade_paginas.return_value = 3
         movimentos_esperados = [mock.create_autospec(spec=Movimento, instance=True)]
@@ -392,7 +392,7 @@ class TestClientSTJ(TestCase):
                 client._parser = self.mock_parser
                 client._parser.extrair_quantidade_paginas.return_value = 3
                 client._total_movimentos = 250
-                client._html_primeira_pagina = b'html'
+                client._html_primeira_pagina = 'html'
 
                 with mock.patch.object(ClientSTJ, '_realizar_requisicao') as mock_realizar_requisicao:
                     paginas = client.buscar_paginas_movimentos()
@@ -416,17 +416,17 @@ class TestClientSTJ(TestCase):
 
     # Testes movimentos_paginados
     def test_movimentos_paginados__retorna_true_se_quantidade_paginas_for_maior_que_1(self):
-        self.cliente_stj._html_primeira_pagina = b'html'
+        self.cliente_stj._html_primeira_pagina = 'html'
         self.cliente_stj._parser.extrair_quantidade_paginas.return_value = 2
         self.assertTrue(self.cliente_stj.movimentos_paginados)
 
     def test_movimentos_paginados__retorna_false_se_quantidade_paginas_for_igual_1(self):
-        self.cliente_stj._html_primeira_pagina = b'html'
+        self.cliente_stj._html_primeira_pagina = 'html'
         self.cliente_stj._parser.extrair_quantidade_paginas.return_value = 1
         self.assertFalse(self.cliente_stj.movimentos_paginados)
 
     def test_movimentos_paginados__retorna_false_se_quantidade_paginas_for_menor_que_1(self):
-        self.cliente_stj._html_primeira_pagina = b'html'
+        self.cliente_stj._html_primeira_pagina = 'html'
         self.cliente_stj._parser.extrair_quantidade_paginas.return_value = 0
         self.assertFalse(self.cliente_stj.movimentos_paginados)
 

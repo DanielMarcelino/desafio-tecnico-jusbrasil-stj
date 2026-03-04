@@ -26,7 +26,7 @@ class Parser:
 
     Example:
         parser = Parser()
-        dados = parser.extrair_dados_processo(html_bytes)
+        dados = parser.extrair_dados_processo(html)
     """
 
     def __init__(self):
@@ -34,7 +34,7 @@ class Parser:
         # por instância e não compartilhado entre objetos distintos.
         setattr(self, self._obter_soup.__name__, lru_cache(maxsize=2)(self._obter_soup))
 
-    def extrair_dados_processo(self, html: bytes) -> DadosProcesso:
+    def extrair_dados_processo(self, html: str) -> DadosProcesso:
         """Extrai todos os dados do processo a partir do HTML completo da página.
 
         Agrega detalhes, partes, advogados, petições, pautas e movimentos em
@@ -42,7 +42,7 @@ class Parser:
         com o momento atual no fuso horário configurado.
 
         Args:
-            html: Conteúdo HTML da página do processo em bytes.
+            html: Conteúdo HTML da página do processos em str.
 
         Returns:
             Objeto `DadosProcesso` preenchido com todos os dados extraídos.
@@ -57,14 +57,14 @@ class Parser:
             ultima_atualizacao=datetime.now(TIME_ZONE)
         )
 
-    def extrair_detalhes(self, html: bytes) -> DetalhesProcesso:
+    def extrair_detalhes(self, html: str) -> DetalhesProcesso:
         """Extrai os metadados estruturais do processo a partir dos blocos de detalhes.
 
         Lê os três blocos de detalhes do HTML (dados gerais, relator/assuntos,
         origem) e mapeia cada label para seu valor correspondente.
 
         Args:
-            html: Conteúdo HTML da página do processo em bytes.
+            html: Conteúdo HTML da página do processo em str.
 
         Returns:
             Objeto `DetalhesProcesso` com os metadados extraídos.
@@ -99,14 +99,14 @@ class Parser:
             numeros_de_origem=self._extrair_numeros_origem(detalhes_bloco_3.get('NÚMEROS DE ORIGEM:')),
         )
 
-    def extrair_partes(self, html: bytes) -> list[Parte]:
+    def extrair_partes(self, html: str) -> list[Parte]:
         """Extrai as partes do processo, excluindo advogados.
 
         Itera sobre todas as entradas de partes/advogados do HTML e filtra
         apenas aquelas cuja designação não começa com 'Advogado'.
 
         Args:
-            html: Conteúdo HTML da página do processo em bytes.
+            html: Conteúdo HTML da página do processo em str.
 
         Returns:
             Lista de objetos `Parte` com designação e nome.
@@ -118,14 +118,14 @@ class Parser:
             partes.append(Parte(designacao=designacao, nome=nome))
         return partes
 
-    def extrair_advogados(self, html: bytes) -> list[Advogado]:
+    def extrair_advogados(self, html: str) -> list[Advogado]:
         """Extrai os advogados vinculados ao processo.
 
         Filtra as entradas cuja designação começa com 'Advogado' e separa
         nome e número de OAB usando regex no formato `Nome - OAB`.
 
         Args:
-            html: Conteúdo HTML da página do processo em bytes.
+            html: Conteúdo HTML da página do processo em str.
 
         Returns:
             Lista de objetos `Advogado` com nome e OAB.
@@ -145,14 +145,14 @@ class Parser:
             advogados.append(Advogado(nome=nome_dvogado, oab=oab))
         return advogados
 
-    def extrair_peticoes(self, html: bytes) -> list[Peticao]:
+    def extrair_peticoes(self, html: str) -> list[Peticao]:
         """Extrai as petições protocoladas no processo.
 
         Seleciona as linhas de petições do HTML e extrai número de protocolo,
         datas, tipo e peticionário de cada entrada.
 
         Args:
-            html: Conteúdo HTML da página do processo em bytes.
+            html: Conteúdo HTML da página do processo em str.
 
         Returns:
             Lista de objetos `Peticao`. Retorna lista vazia se não houver petições.
@@ -175,14 +175,14 @@ class Parser:
             ))
         return peticoes
 
-    def extrair_pautas(self, html: bytes) -> list[Pauta]:
+    def extrair_pautas(self, html: str) -> list[Pauta]:
         """Extrai as pautas de julgamento associadas ao processo.
 
         Seleciona as linhas de pauta e extrai data/hora da sessão, órgão julgador
         e o código do documento de pauta a partir do atributo `onclick` da âncora.
 
         Args:
-            html: Conteúdo HTML da página do processo em bytes.
+            html: Conteúdo HTML da página do processo em str.
 
         Returns:
             Lista de objetos `Pauta`. Retorna lista vazia se não houver pautas.
@@ -225,14 +225,14 @@ class Parser:
             ))
         return pautas
 
-    def extrair_movimentos(self, html: bytes) -> list[Movimento]:
+    def extrair_movimentos(self, html: str) -> list[Movimento]:
         """Extrai os movimentos (andamentos) registrados no processo.
 
         Seleciona as linhas de movimentos do HTML e extrai data, descrição
         e documentos anexos de cada entrada.
 
         Args:
-            html: Conteúdo HTML da página do processo em bytes.
+            html: Conteúdo HTML da página do processo em str.
 
         Returns:
             Lista de objetos `Movimento`. Retorna lista vazia se não houver movimentos.
@@ -259,7 +259,7 @@ class Parser:
             ))
         return movimentos
 
-    def extrair_quantidade_total_movimentos(self, html: bytes) -> int | None:
+    def extrair_quantidade_total_movimentos(self, html: str) -> int | None:
         """Extrai o total de movimentos registrados no processo.
 
         Lê o campo hidden `idHddPaginacaofasesNumTotalRegistros` do formulário
@@ -267,7 +267,7 @@ class Parser:
         da página atual.
 
         Args:
-            html: Conteúdo HTML da página do processo em bytes.
+            html: Conteúdo HTML da página do processo em str.
 
         Returns:
             Total de movimentos do processo. Retorna `1` se o campo hidden
@@ -286,14 +286,14 @@ class Parser:
         quantidade_total_movimentos = int(str(input_total_movimentos['value']).strip())
         return quantidade_total_movimentos
 
-    def extrair_quantidade_paginas(self, html: bytes) -> int:
+    def extrair_quantidade_paginas(self, html: str) -> int:
         """Calcula o número total de páginas de movimentos do processo.
 
         Divide o total de movimentos pela quantidade de movimentos exibidos
         na página atual, arredondando para cima quando há resto.
 
         Args:
-            html: Conteúdo HTML da página do processo em bytes.
+            html: Conteúdo HTML da página do processo em str.
 
         Returns:
             Número total de páginas. Retorna `1` se não houver movimentos
@@ -357,14 +357,14 @@ class Parser:
             ))
         return documentos
 
-    def _extrair_partes(self, html: bytes) -> Generator[tuple[str, str], None, None]:
+    def _extrair_partes(self, html: str) -> Generator[tuple[str, str], None, None]:
         """Gera pares (designação, nome) para cada parte ou advogado listado no processo.
 
         Itera sobre as linhas de partes/advogados/procuradores do HTML e
         normaliza a designação para title case sem pontuação final.
 
         Args:
-            html: Conteúdo HTML da página do processo em bytes.
+            html: Conteúdo HTML da página do processo em str.
 
         Yields:
             Tupla (designacao, nome) para cada entrada encontrada.
@@ -595,14 +595,14 @@ class Parser:
         """
         return re.sub(r'[.,:]\Z', '', texto.strip())
 
-    def _obter_soup(self, html: bytes) -> BeautifulSoup:
-        """Cria um objeto BeautifulSoup a partir do HTML em bytes.
+    def _obter_soup(self, html: str) -> BeautifulSoup:
+        """Cria um objeto BeautifulSoup a partir do HTML em str.
 
         Utiliza o parser `lxml` para melhor desempenho. Este método é
         automaticamente memorizado com `lru_cache` na instância (ver `__init__`).
 
         Args:
-            html: Conteúdo HTML em bytes.
+            html: Conteúdo HTML em str.
 
         Returns:
             Objeto `BeautifulSoup` pronto para consulta.
