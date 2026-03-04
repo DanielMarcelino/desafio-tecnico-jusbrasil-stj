@@ -174,6 +174,15 @@ class TestParser(TestCase):
         )
         self.assertEqual(quantidade_esperada, len(movimentos_obtidos))
 
+    # Testes extrair_quantidade_total_movimentos
+    def test_extrair_quantidade_total_movimentos__extrai_quantidade_processo_1(self):
+        html = obtem_fixture(self.path_fixture_processo_1)
+        self.assertEqual(198, self.parser.extrair_quantidade_total_movimentos(html))
+
+    def test_extrair_quantidade_total_movimentos__retorna_none_quando_dado_nao_disponivel(self):
+        html = obtem_fixture(self.path_fixture_processo_2)
+        self.assertEqual(None, self.parser.extrair_quantidade_total_movimentos(html))
+
     # Testes extrair_quantidade_paginas
     def test_extrair_quantidade_paginas__extrai_quantidade_paginas_processo_1(self):
         html = obtem_fixture(self.path_fixture_processo_1)

@@ -259,18 +259,19 @@ class Parser:
             ))
         return movimentos
 
-    def extrair_quantidade_paginas(self, html: bytes) -> int:
-        """Calcula o número total de páginas de movimentos do processo.
+    def extrair_quantidade_total_movimentos(self, html: bytes) -> int | None:
+        """Extrai o total de movimentos registrados no processo.
 
-        Usa a quantidade de movimentos na página atual e o total de movimentos
-        informado pelo campo hidden do formulário para calcular a paginação.
-        Retorna 1 se não houver movimentos ou se o campo de total não existir.
+        Lê o campo hidden `idHddPaginacaofasesNumTotalRegistros` do formulário
+        de paginação, que armazena o contador total de movimentos independente
+        da página atual.
 
         Args:
             html: Conteúdo HTML da página do processo em bytes.
 
         Returns:
-            Número inteiro de páginas de movimentos.
+            Total de movimentos do processo. Retorna `1` se o campo hidden
+            não for encontrado.
 
         Raises:
             ValueError: Se o bloco do formulário de paginação não for encontrado.
@@ -278,18 +279,37 @@ class Parser:
         soup = self._obter_soup(html)
         path_selector = 'div#idDivFormularioCamposBloco'
         if not (tag_formulario := soup.select_one(path_selector)):
-            raise ValueError('Não foi possivel extrair dados paginação!')
-        path_selector_linhas_movimentos = (
+            raise ValueError('Não foi possivel extrair a quantidade total de movimentos!')
+        input_total_movimentos = tag_formulario.select_one('input#idHddPaginacaofasesNumTotalRegistros')
+        if not input_total_movimentos:
+            return None
+        quantidade_total_movimentos = int(str(input_total_movimentos['value']).strip())
+        return quantidade_total_movimentos
+
+    def extrair_quantidade_paginas(self, html: bytes) -> int:
+        """Calcula o número total de páginas de movimentos do processo.
+
+        Divide o total de movimentos pela quantidade de movimentos exibidos
+        na página atual, arredondando para cima quando há resto.
+
+        Args:
+            html: Conteúdo HTML da página do processo em bytes.
+
+        Returns:
+            Número total de páginas. Retorna `1` se não houver movimentos
+            na página atual ou se o total de movimentos não puder ser obtido.
+        """
+        soup = self._obter_soup(html)
+        path_selector = (
             'div#idDivFases > div.classDivConteudoPesquisaProcessual > div.classDivFaseLinha'
         )
-        linhas_movimentos = soup.select(path_selector_linhas_movimentos)
+        linhas_movimentos = soup.select(path_selector)
         quantidade_movimentos_pagina = len(linhas_movimentos) if linhas_movimentos else 0
         if quantidade_movimentos_pagina == 0:
             return 1
-        input_total_movimentos = tag_formulario.select_one('input#idHddPaginacaofasesNumTotalRegistros')
-        if not input_total_movimentos:
+        quantidade_total_movimentos = self.extrair_quantidade_total_movimentos(html)
+        if not quantidade_total_movimentos:
             return 1
-        quantidade_total_movimentos = int(str(input_total_movimentos['value']).strip())
         quantidade_paginas = quantidade_total_movimentos // quantidade_movimentos_pagina
         if (quantidade_total_movimentos % quantidade_movimentos_pagina) > 0:
             quantidade_paginas += 1
