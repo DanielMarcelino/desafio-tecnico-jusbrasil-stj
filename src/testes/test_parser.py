@@ -514,7 +514,7 @@ class TestParser(TestCase):
              mock.patch.object(Parser, 'extrair_peticoes', return_value=criar_peticoes()), \
              mock.patch.object(Parser, 'extrair_pautas', return_value=criar_pautas()), \
              mock.patch.object(Parser, 'extrair_movimentos', return_value=criar_movimentos()):
-            dados_retornados = self.parser.extrair_dados_processo(b'<html>')
+            dados_retornados = self.parser.extrair_dados_processo('<html>')
 
         self.assertIsInstance(dados_retornados, DadosProcesso)
         self.assertDictEqual(dados_esperados.model_dump(), dados_retornados.model_dump())
@@ -527,6 +527,6 @@ class TestParser(TestCase):
              mock.patch.object(Parser, 'extrair_peticoes', return_value=criar_peticoes()), \
              mock.patch.object(Parser, 'extrair_pautas', return_value=criar_pautas()), \
              mock.patch.object(Parser, 'extrair_movimentos', return_value=criar_movimentos()):
-            dados_retornados = self.parser.extrair_dados_processo(b'<html>')
+            dados_retornados = self.parser.extrair_dados_processo('<html>')
 
         self.assertEqual(datetime.now(TIME_ZONE), dados_retornados.ultima_atualizacao)
