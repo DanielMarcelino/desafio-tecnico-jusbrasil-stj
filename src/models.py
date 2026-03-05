@@ -1,4 +1,5 @@
 import json
+import re
 
 from abc import ABC
 from datetime import datetime
@@ -302,3 +303,122 @@ class DadosProcesso(BaseModel):
         if isinstance(v, datetime):
             return v.astimezone(TIME_ZONE)
         return v
+
+
+class Processo(BaseModel):
+    """Representa um processo judicial com seus dados e ciclo de vida de persistência.
+
+    Encapsula `DadosProcesso` e fornece métodos para criação, carregamento,
+    atualização e persistência no storage. Na atualização, movimentos existentes
+    e novos são mesclados e deduplicados via `set`, preservando o histórico completo.
+
+    Attributes:
+        PATH_ARQUIVO: Padrão do caminho do arquivo no storage, parametrizado
+            pelo `id_processo` (ex: `'0123456/dados_processo.json'`).
+        dados: Dados completos do processo extraídos do STJ.
+    """
+
+    PATH_ARQUIVO: ClassVar[str] = '{id_processo}/dados_processo.json'
+
+    dados: DadosProcesso
+
+    @classmethod
+    def criar(cls, dados: DadosProcesso) -> 'Processo':
+        """Cria uma nova instância de `Processo` com os movimentos ordenados.
+
+        Args:
+            dados: Dados do processo recém-extraídos do STJ.
+
+        Returns:
+            Nova instância de `Processo` com movimentos em ordem decrescente de data.
+        """
+        dados.movimentos = cls._ordena_movimentos(dados.movimentos)
+        return Processo(dados=dados)
+
+    @classmethod
+    def carregar(cls, storage: Storage, registro_stj: str) -> Self | None:
+        """Carrega um processo previamente persistido no storage.
+
+        Deriva o caminho do arquivo a partir dos dígitos do registro STJ e
+        desserializa o JSON encontrado.
+
+        Args:
+            storage: Instância de `Storage` de onde o arquivo será lido.
+            registro_stj: Número de registro STJ do processo
+                (ex: `'2023/0123456-7'`).
+
+        Returns:
+            Instância de `Processo` desserializada, ou `None` se o arquivo
+            não existir no storage.
+        """
+        id_processo = cls._apenas_numeros(registro_stj)
+        path_arquivo = cls.PATH_ARQUIVO.format(id_processo=id_processo)
+        arquivo = storage.obter_arquivo(path_arquivo=path_arquivo)
+        return cls(**json.loads(arquivo)) if arquivo else None
+
+    def atualizar(self, dados: DadosProcesso) -> None:
+        """Atualiza os dados do processo mesclando os movimentos existentes com os novos.
+
+        Utiliza a igualdade e hash de `Movimento` para deduplicar movimentos
+        repetidos entre o estado atual e os dados recebidos, preservando o
+        histórico completo sem duplicatas.
+
+        Args:
+            dados: Dados atualizados do processo. Os movimentos serão mesclados
+                com os já armazenados na instância.
+        """
+        movimentos_carregados: set[Movimento] = set(self.dados.movimentos)
+        movimentos_atualizados: set[Movimento] = set(dados.movimentos)
+        movimentos_mesclados: set[Movimento] = movimentos_carregados.union(movimentos_atualizados)
+        dados.movimentos = self._ordena_movimentos(movimentos_mesclados)
+        self.dados = dados
+
+    def salvar(self, storage: Storage) -> None:
+        """Persiste o processo serializado como JSON no storage.
+
+        O caminho do arquivo é derivado do `id_processo` seguindo o padrão
+        definido em `PATH_ARQUIVO`.
+
+        Args:
+            storage: Instância de `Storage` onde o arquivo será salvo.
+        """
+        path_arquivo = self.PATH_ARQUIVO.format(id_processo=self.id_processo)
+        content = self.model_dump_json().encode()
+        storage.salvar_arquivo(path_arquivo=path_arquivo, content=content)
+
+    @classmethod
+    def _ordena_movimentos(cls, movimentos: list[Movimento] | set[Movimento]) -> list[Movimento]:
+        """Ordena os movimentos por data em ordem decrescente.
+
+        Args:
+            movimentos: Lista ou conjunto de movimentos a ordenar.
+
+        Returns:
+            Lista de movimentos ordenada do mais recente para o mais antigo.
+        """
+        return sorted(movimentos, key=lambda m: m.data, reverse=True)
+
+    @property
+    def id_processo(self) -> str:
+        """Identificador numérico do processo, extraído do registro STJ.
+
+        Retorna apenas os dígitos do `registro_stj`, usado como chave de
+        armazenamento no storage.
+
+        Returns:
+            String contendo apenas os dígitos do registro STJ
+            (ex: `'202301234567'`).
+        """
+        return self._apenas_numeros(self.dados.detalhes.registro_stj)
+
+    @classmethod
+    def _apenas_numeros(self, string: str):
+        """Remove todos os caracteres não numéricos de uma string.
+
+        Args:
+            string: String a ser processada.
+
+        Returns:
+            String contendo apenas os dígitos da entrada.
+        """
+        return re.sub(r'\D', '', string)
