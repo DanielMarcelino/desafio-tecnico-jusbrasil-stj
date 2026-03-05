@@ -1,0 +1,13 @@
+{
+    "date": "Thu, 05 Mar 2026 14:39:23 GMT",
+    "content-type": "text/html;charset=ISO-8859-1",
+    "server-timing": "cfEdge;dur=6,cfOrigin;dur=37",
+    "x-xss-protection": "1; mode=block",
+    "content-security-policy": "upgrade-insecure-requests; frame-ancestors 'self' https://*.stj.jus.br https://*.web.stj.jus.br https://stjjus.sharepoint.com",
+    "set-cookie": "TS5d516d15027=0845fc7f4bab20006963d0497f6c0f190ce1ee2a37ae6d7cf4bb79f4694315435f11085a649d098908c5b2457b113000806d161ab1a538e32782fdce385713e6976d07f9e78dab7080bce259d7fb3c12b9bc93efe11dec9c6f754d8484428e25; Path=/",
+    "cf-cache-status": "DYNAMIC",
+    "content-encoding": "gzip",
+    "server": "cloudflare",
+    "cf-ray": "9d79deac1d821a88-GRU",
+    "X-Firefox-Spdy": "h2"
+}

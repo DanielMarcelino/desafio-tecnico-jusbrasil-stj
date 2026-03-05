@@ -1,6 +1,7 @@
-bs4>=0.0
+bs4>=0.0.2
 Jinja2>=3.1
 lxml>=6.0
 pydantic>=2.12
 requests>=2.32
+tenacity>=9.1.4
 tox>=4.34
