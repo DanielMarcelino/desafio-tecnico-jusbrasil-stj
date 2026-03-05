@@ -95,7 +95,7 @@ class ClientSTJ:
         parametros_busca = self._obter_parametros_busca_processo()
         resposta = self._realizar_requisicao(method='POST', url=self.URL_BASE, data=parametros_busca)
         self._html_primeira_pagina = resposta.text
-        self._total_movimentos = self._parser.extrair_quantidade_total_movimentos(resposta.content)
+        self._total_movimentos = self._parser.extrair_quantidade_total_movimentos(self._html_primeira_pagina)
         return self._parser.extrair_dados_processo(self._html_primeira_pagina)
 
     @property
@@ -319,7 +319,7 @@ class ClientSTJ:
             'listarProcessosAtivosSomente': 'false',
             'listarProcessosEletronicosSomente': 'true'
         }
-        # implementar inferência do tipo do número do processo com regex
+
         if self._is_cnj(self._numero_processo):
             parametros['numeroUnico'] = self._numero_processo
         elif self._is_proc_stj(self._numero_processo):
