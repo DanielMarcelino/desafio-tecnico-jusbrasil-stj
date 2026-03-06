@@ -64,6 +64,7 @@ class TesteCrawlerDocumentoEproc(TestCase):
             },
             CrawlerDocumento.HEADERS
         )
+        self.assertEqual(60, CrawlerDocumento.TIMEOUT)
 
     def test_baixar_documento__quando_documento_nao_existe_no_storage__baixa_e_salva_arquivo(self):
         self.mock_response.headers = self.headers_resposta_arquivo
@@ -159,5 +160,6 @@ class TesteCrawlerDocumentoEproc(TestCase):
 
                 mock_get.assert_called_once_with(
                     url=self.crawler.URL_BASE.format(id_documento='320184034'),
-                    headers=self.crawler.HEADERS
+                    headers=self.crawler.HEADERS,
+                    timeout=self.crawler.TIMEOUT
                 )

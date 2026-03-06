@@ -63,6 +63,8 @@ class CrawlerDocumento:
         'TE': 'trailers'
     }
 
+    TIMEOUT = 60
+
     def __init__(self, storage: Storage, id_processo: str, tipo_documento: str, documento: Documento):
         """Inicializa o crawler para um documento específico.
 
@@ -140,7 +142,7 @@ class CrawlerDocumento:
         """
         id = self._extrair_id_documento(self._documento.link)
         link = self.URL_BASE.format(id_documento=id)
-        resposta = requests.get(url=link, headers=self.HEADERS)
+        resposta = requests.get(url=link, headers=self.HEADERS, timeout=self.TIMEOUT)
         resposta.raise_for_status()
         return resposta
 
