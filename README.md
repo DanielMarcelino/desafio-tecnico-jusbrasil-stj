@@ -6,6 +6,19 @@ Este projeto foi desenvolvido como solução para o desafio técnico do Jusbrasi
 
 ---
 
+## Funcionalidades
+
+- Busca de processos por três formatos de número
+- Extração estruturada de detalhes, partes, advogados, petições, pautas e movimentos
+- Suporte a paginação automática de movimentos
+- Mesclagem e deduplicação de movimentos entre execuções
+- Download assíncrono e paralelo de documentos
+- Retry automático com backoff exponencial em falhas de rede
+- Persistência local dos dados do processo em JSON e HTML
+- Verificação de existência de arquivos com suporte a wildcard
+
+---
+
 ## Requisitos
 
 - **Python 3.12+** - o projeto utiliza recursos introduzidos no Python 3.12, como `zoneinfo` nativo e anotações de tipo modernas
@@ -50,6 +63,23 @@ Ao fim da busca, os dados do processo e seus documentos estarão disponíveis no
 
 ---
 
+## Variáveis de ambiente
+
+| Variável | Descrição | Padrão |
+|---|---|---|
+| `FLARESOLVERR_HOST` | Endereço do FlareSolverr no formato `host:porta` | `http://localhost:8191` |
+| `HTTPS_PROXY` | Proxy HTTPS para as requisições ao STJ | — |
+
+Exemplo de uso:
+
+```bash
+FLARESOLVERR_HOST=http://192.168.1.10:8191 \
+HTTPS_PROXY=http://usuario:senha@proxy.exemplo.com:8080 \
+PYTHONPATH=src/ python src/run.py --processo "EAREsp 2814815"
+```
+
+---
+
 ## Testes
 
 Os testes unitários são executados via **tox** com relatório de cobertura:
@@ -69,19 +99,6 @@ coverage/index.html
 ## Visão geral
 
 O STJ utiliza proteção Cloudflare Turnstile para bloquear acesso automatizado. O crawler contorna essa proteção via [**FlareSolverr**](https://github.com/FlareSolverr/FlareSolverr), que resolve o desafio e fornece os cookies e User-Agent necessários para autenticar as requisições. A solução obtida é armazenada em cache no storage local e reutilizada entre execuções para evitar resoluções desnecessárias, sendo renovada automaticamente quando expirada ou quando a requisição retorna HTTP 403.
-
----
-
-## Funcionalidades
-
-- Busca de processos por três formatos de número
-- Extração estruturada de detalhes, partes, advogados, petições, pautas e movimentos
-- Suporte a paginação automática de movimentos
-- Mesclagem e deduplicação de movimentos entre execuções
-- Download assíncrono e paralelo de documentos
-- Retry automático com backoff exponencial em falhas de rede
-- Persistência local dos dados do processo em JSON e HTML
-- Verificação de existência de arquivos com suporte a wildcard
 
 ---
 
