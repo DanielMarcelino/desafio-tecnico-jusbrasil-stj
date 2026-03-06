@@ -327,7 +327,7 @@ class DadosProcesso(BaseModel):
         return {
             'Número STJ': d.numero_stj,
             'Registro STJ': d.registro_stj,
-            'Número Único STJ': d.registro_stj,
+            'Número Único STJ': d.numero_cnj,
             'Classe': d.classe,
             'Localização': d.localizacao,
             'Tipo': d.tipo,
