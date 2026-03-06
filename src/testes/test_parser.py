@@ -11,7 +11,7 @@ from models import DadosProcesso, DetalhesProcesso, Parte, Advogado, Peticao, Pa
 
 
 @lru_cache()
-def obtem_fixture(path: str) -> str:
+def obter_fixture(path: str) -> str:
     p = Path('src/testes/fixtures').joinpath(path)
     with p.open('r') as f:
         conteudo_fixture: str = f.read()
@@ -83,7 +83,7 @@ class TestParser(TestCase):
         return super().setUp()
 
     def _testar_extrair_detalhes(self, path_fixture: str, detalhes_esperados: DetalhesProcesso) -> None:
-        html = obtem_fixture(path_fixture)
+        html = obter_fixture(path_fixture)
         detalhes_obtidos: DetalhesProcesso = self.parser.extrair_detalhes(html)
 
         self.assertIsInstance(detalhes_obtidos, DetalhesProcesso)
@@ -96,7 +96,7 @@ class TestParser(TestCase):
                 self.assertEqual(dump_detalhes_esperados[detalhe], dump_detalhes_obtidos[detalhe])
 
     def _testar_extrair_partes(self, path_fixture: str, partes_esperadas: list[Parte]) -> None:
-        html = obtem_fixture(path_fixture)
+        html = obter_fixture(path_fixture)
         partes_obtidas: list[Parte] = self.parser.extrair_partes(html)
 
         self.assertIsInstance(partes_obtidas, list)
@@ -110,7 +110,7 @@ class TestParser(TestCase):
         )
 
     def _testar_extrair_advogados(self, path_fixture: str, advogados_esperados: list[Advogado]) -> None:
-        html = obtem_fixture(path_fixture)
+        html = obter_fixture(path_fixture)
         advogados_obtidos: list[Advogado] = self.parser.extrair_advogados(html)
 
         self.assertIsInstance(advogados_obtidos, list)
@@ -125,7 +125,7 @@ class TestParser(TestCase):
 
     def _testar_extrair_peticoes(self, path_fixture: str, peticoes_esperadas: list[Peticao],
                                  indices: tuple, quantidade_esperada: int) -> None:
-        html = obtem_fixture(path_fixture)
+        html = obter_fixture(path_fixture)
         peticoes_obtidas: list[Advogado] = self.parser.extrair_peticoes(html)
 
         self.assertIsInstance(peticoes_obtidas, list)
@@ -142,7 +142,7 @@ class TestParser(TestCase):
 
     def _testar_extrair_pautas(self, path_fixture: str, pautas_esperadas: list[Peticao],
                                indices: tuple, quantidade_esperada: int) -> None:
-        html = obtem_fixture(path_fixture)
+        html = obter_fixture(path_fixture)
         pautas_obtidas: list[Advogado] = self.parser.extrair_pautas(html)
 
         self.assertIsInstance(pautas_obtidas, list)
@@ -159,7 +159,7 @@ class TestParser(TestCase):
 
     def _testar_extrair_movimentos(self, path_fixture: str, movimentos_esperados: list[Peticao],
                                    indices: tuple, quantidade_esperada: int) -> None:
-        html = obtem_fixture(path_fixture)
+        html = obter_fixture(path_fixture)
         movimentos_obtidos: list[Advogado] = self.parser.extrair_movimentos(html)
 
         self.assertIsInstance(movimentos_obtidos, list)
@@ -176,29 +176,29 @@ class TestParser(TestCase):
 
     # Testes extrair_quantidade_total_movimentos
     def test_extrair_quantidade_total_movimentos__extrai_quantidade_processo_1(self):
-        html = obtem_fixture(self.path_fixture_processo_1)
+        html = obter_fixture(self.path_fixture_processo_1)
         self.assertEqual(198, self.parser.extrair_quantidade_total_movimentos(html))
 
     def test_extrair_quantidade_total_movimentos__retorna_none_quando_dado_nao_disponivel(self):
-        html = obtem_fixture(self.path_fixture_processo_2)
+        html = obter_fixture(self.path_fixture_processo_2)
         self.assertEqual(None, self.parser.extrair_quantidade_total_movimentos(html))
 
     # Testes extrair_quantidade_paginas
     def test_extrair_quantidade_paginas__extrai_quantidade_paginas_processo_1(self):
-        html = obtem_fixture(self.path_fixture_processo_1)
+        html = obter_fixture(self.path_fixture_processo_1)
         self.assertEqual(2, self.parser.extrair_quantidade_paginas(html))
 
     def test_extrair_quantidade_paginas__extrai_quantidade_paginas_processo_2(self):
-        html = obtem_fixture(self.path_fixture_processo_2)
+        html = obter_fixture(self.path_fixture_processo_2)
         self.assertEqual(1, self.parser.extrair_quantidade_paginas(html))
 
     def test_extrair_quantidade_paginas__extrai_quantidade_paginas_processo_3(self):
-        html = obtem_fixture(self.path_fixture_processo_3)
+        html = obter_fixture(self.path_fixture_processo_3)
         self.assertEqual(1, self.parser.extrair_quantidade_paginas(html))
 
     # Testes extrair_detalhes
     def test_extrair_detalhes__quando_processo_inexistente_lanca_excecao(self):
-        html = obtem_fixture(self.path_fixture_nenhum_registro_encontrado)
+        html = obter_fixture(self.path_fixture_nenhum_registro_encontrado)
         with self.assertRaises(NenhumRegistroEncontradoException):
             self.parser.extrair_detalhes(html)
 

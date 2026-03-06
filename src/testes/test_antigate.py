@@ -12,7 +12,7 @@ from models import SolucaoAntigate
 
 
 @lru_cache()
-def obtem_fixture(path: str) -> dict:
+def obter_fixture(path: str) -> dict:
     p = Path('src/testes/fixtures').joinpath(path)
     with p.open('rb') as f:
         conteudo_fixture: bytes = f.read()
@@ -34,7 +34,7 @@ class TestTurnstileSolverClient(TestCase):
 
     def test_resolver__realiza_requisicao_post_ao_servico_flaresolverr(self):
         """Deve realizar uma requisição POST ao endpoint do serviço do FlareSolverr com a payload esperada."""
-        self.mock_response.json.return_value = obtem_fixture('solucao_turnstile_sucesso.json')
+        self.mock_response.json.return_value = obter_fixture('solucao_turnstile_sucesso.json')
 
         with mock.patch('antigate.requests.post', new=self.mock_post):
             self.resolvedor.resolver()
@@ -52,7 +52,7 @@ class TestTurnstileSolverClient(TestCase):
 
     def test_resolver__quando_proxy_estiver_configurado_deve_inlcuir_na_paylodad_de_acesso_ao_flaresolverr(self):
         """Quando o Proxy estiver configurado deve inlcluí-lo na payload."""
-        self.mock_response.json.return_value = obtem_fixture('solucao_turnstile_sucesso.json')
+        self.mock_response.json.return_value = obter_fixture('solucao_turnstile_sucesso.json')
 
         with mock.patch('antigate.requests.post', new=self.mock_post), \
              mock.patch('antigate.os.environ', new={'HTTPS_PROXY': 'http://proxy.url:3128'}):
@@ -73,7 +73,7 @@ class TestTurnstileSolverClient(TestCase):
     def test_resolver__quando_sucesso_ao_solucionar_captcha_retorna_objeto_com_dados_da_sessao(self):
         """Deve retornar uma instância da classe ```models.SolucaoAntigate``` com os dados da sessão
         de acesso ao recurso do tribunal."""
-        self.mock_response.json.return_value = obtem_fixture('solucao_turnstile_sucesso.json')
+        self.mock_response.json.return_value = obter_fixture('solucao_turnstile_sucesso.json')
         timestamp_fixo = 0
 
         with mock.patch('antigate.requests.post', new=self.mock_post), \
@@ -114,7 +114,7 @@ class TestTurnstileSolverClient(TestCase):
     def test_resolver__quando_captcha_nao_encontrado_lanca_excecao(self):
         """Quando o FlareSolverr não encontrar o CAPTCHA na url informada, deve lançar
         FalhaSolucaoTurnstileException com a mensagem de erro do campo ```message``` do JSON da resposta."""
-        self.mock_response.json.return_value = obtem_fixture('solucao_turnstile_desafio_nao_detectado.json')
+        self.mock_response.json.return_value = obter_fixture('solucao_turnstile_desafio_nao_detectado.json')
 
         with mock.patch('antigate.requests.post', new=self.mock_post), \
              self.assertRaisesRegex(FalhaSolucaoTurnstileException, 'Challenge not detected!'):
@@ -123,7 +123,7 @@ class TestTurnstileSolverClient(TestCase):
     def test_resolver__quando_ocorre_falha_ao_soluconar_captcha_lanca_excecao(self):
         """Quando o FlareSolverr retornar erro ao realizar a solução de captcha, deve lançar
         FalhaSolucaoTurnstileException com a mensagem de erro do campo ```message``` do JSON da resposta."""
-        self.mock_response.json.return_value = obtem_fixture('solucao_turnstile_erro_ao_solucionar.json')
+        self.mock_response.json.return_value = obter_fixture('solucao_turnstile_erro_ao_solucionar.json')
         self.mock_response.ok = False
         mensagem_erro = 'Error: Error solving the challenge. Timeout after 0.12 seconds.'
 
@@ -134,7 +134,7 @@ class TestTurnstileSolverClient(TestCase):
     def test_resolver__quando_ocorre_falha_ao_processar_pedido_de_solucao_lanca_excecao(self):
         """Quando o FlareSolverr retornar erro ao procesar pedido de solução de captcha, deve lançar
         FalhaSolucaoTurnstileException com a mensagem de erro do campo ```error``` do JSON da resposta."""
-        self.mock_response.json.return_value = obtem_fixture('solucao_turnstile_erro_ao_processar_pedido.json')
+        self.mock_response.json.return_value = obter_fixture('solucao_turnstile_erro_ao_processar_pedido.json')
         self.mock_response.ok = False
 
         with mock.patch('antigate.requests.post', new=self.mock_post), \
