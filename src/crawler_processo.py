@@ -61,7 +61,7 @@ class CrawlerProcesso:
             processo: Processo | None = Processo.carregar(storage=self._storage, registro_stj=registro_stj)
             if client.movimentos_paginados and not self._processo_atualizado(processo, dados):
                 for i, movimentos in enumerate(client.buscar_paginas_movimentos()):
-                    self._logger.info('Buscando página adicional de movimentos. Página: %d', i)
+                    self._logger.info('Buscando página adicional de movimentos. Página: %d', i + 2)
                     dados.movimentos.extend(movimentos)
 
             if processo:
