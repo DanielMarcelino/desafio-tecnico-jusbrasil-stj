@@ -1,0 +1,21 @@
+<section class="mb-3">
+    <h4>Pautas:</h4>
+    <div class="col border rounded p-0">
+        <table class="table table-striped mb-0">
+        <thead>
+            <th>Data sessão</th>
+            <th>Órgão julgador</th>
+            <th>Documento</th>
+        </thead>
+        <tbody>
+            {% for pauta in processo.dados.pautas %}
+            <tr>
+                <td>{{ pauta.data_sessao.strftime('%d/%m/%Y %H:%M') }}</td>
+                <td>{{ pauta.orgao_julgador }}</td>
+                <td><a href="../{{ pauta.documento.link }}" target="_blank"  class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover">Documento Pauta</i></a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    </div>
+</section>

@@ -1,0 +1,5 @@
+{% for documento in movimento.documentos %}
+    <li class="list-unstyled">
+        <a href="../{{ documento.path_arquivo }}" target="_blank"  class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover">{{ documento.descricao }}</i></a>
+    </li>
+{% endfor %}

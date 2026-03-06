@@ -1,0 +1,24 @@
+<section class="mb-3">
+    <h4>Movimentos:</h4>
+    <div class="col border rounded p-0">
+        <table class="table table-striped mb-0">
+        <thead>
+            <th style="width: 15%">Data</th>
+            <th>Descrição</th>
+        </thead>
+        <tbody>
+            {% for movimento in processo.dados.movimentos %}
+            <tr>
+                <td>{{ movimento.data.strftime('%d/%m/%Y %H:%M') }}</td>
+                <td>
+                    {{ movimento.descricao }}
+                    {% if movimento.documentos %}
+                        {% include "_movimento_documentos.html" %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    </div>
+</section>

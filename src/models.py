@@ -312,6 +312,34 @@ class DadosProcesso(BaseModel):
             return v.astimezone(TIME_ZONE)
         return v
 
+    @property
+    def obter_numeros_processo(self) -> str:
+        numeros = (
+            self.detalhes.numero_stj,
+            self.detalhes.registro_stj,
+            self.detalhes.numero_cnj,
+        )
+        return ' - '.join(n for n in numeros if n)
+
+    @property
+    def obter_detalhes(self) -> dict:
+        d = self.detalhes
+        return {
+            'Número STJ': d.numero_stj,
+            'Registro STJ': d.registro_stj,
+            'Número Único STJ': d.registro_stj,
+            'Classe': d.classe,
+            'Localização': d.localizacao,
+            'Tipo': d.tipo,
+            'Autuação': d.autuacao.strftime('%d/%m/%Y %H:%M') if d.autuacao else None,
+            'Relator': d.relator,
+            'Ramos do Direito': d.ramo_do_direito,
+            'Assuntos': ', '.join(d.assuntos),
+            'Tribunal de Origem': d.tribunal_origem,
+            'Volume': d.volume_apenso,
+            'Números e Origem': ', '.join(d.numeros_de_origem),
+        }
+
 
 class Processo(BaseModel):
     """Representa um processo judicial com seus dados e ciclo de vida de persistência.

@@ -1,0 +1,26 @@
+<section class="mb-3">
+    <div class="col">
+        <div class="row align-items-start">
+            <div class="col-6 ">
+                <h4>Partes:</h4>
+                <div class="col-12 mb-2 border rounded p-3">
+                {% for parte in processo.dados.partes %}
+                    <div class="col-12 mb-2">
+                        <b>{{ parte.designacao }}:</b> {{ parte.nome }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-6 ">
+                <h4>Advogados:</h4>
+                <div class="col-12 mb-2 border rounded p-3">
+                {% for advogado in processo.dados.advogados %}
+                    <div class="col-12 mb-2">
+                        <b>{{ advogado.nome }}</b> <span class="badge text-bg-secondary">OAB: {{ advogado.oab }}</span>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

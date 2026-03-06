@@ -1,0 +1,25 @@
+<section class="mb-3">
+    <h4>Petições:</h4>
+    <div class="col border rounded p-0">
+        <table class="table table-striped mb-0">
+        <thead>
+            <th>Número protocolo</th>
+            <th>Data protocolo</th>
+            <th>Tipo</th>
+            <th>Data processamento</th>
+            <th>Peticionario</th>
+        </thead>
+        <tbody>
+            {% for peticao in processo.dados.peticoes %}
+            <tr>
+                <td>{{ peticao.numero_protocolo }}</td>
+                <td>{{ peticao.data_protocolo.strftime('%d/%m/%Y %H:%M') }}</td>
+                <td>{{ peticao.tipo }}</td>
+                <td>{{ peticao.data_processamento.strftime('%d/%m/%Y %H:%M') }}</td>
+                <td>{{ peticao.peticionario }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    </div>
+</section>

@@ -1,0 +1,12 @@
+<section class="mb-3">
+    <h4>Detalhes:</h4>
+    <div class="col border rounded p-3">
+        <div class="row align-items-start  ">
+        {% for rotulo, valor in processo.dados.obter_detalhes.items() %}
+            <div class="col-12 mb-2">
+                <b>{{ rotulo }}:</b> {{ valor or "-" }}
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+</section>
