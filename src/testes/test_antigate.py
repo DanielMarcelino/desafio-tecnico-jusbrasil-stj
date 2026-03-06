@@ -23,10 +23,7 @@ class TestTurnstileSolverClient(TestCase):
     def setUp(self):
         self.url_pagina_captcha = 'https://tribunal.com.br'
         self.timeout = 60
-        self.resolvedor = TurnstileSolverClient(
-            url_pagina_captcha=self.url_pagina_captcha,
-            timeout=self.timeout
-        )
+        self.resolvedor = TurnstileSolverClient(url_pagina_captcha=self.url_pagina_captcha)
 
         self.mock_response = mock.create_autospec(spec=requests.Response, instance=True, **{'ok': True})
         self.mock_post = mock.create_autospec(spec=requests.post, **{'return_value': self.mock_response})
@@ -47,7 +44,8 @@ class TestTurnstileSolverClient(TestCase):
                 'url': self.url_pagina_captcha,
                 'maxTimeout': 60000,
                 'returnOnlyCookies': True
-            }
+            },
+            timeout=60
         )
 
     def test_resolver__quando_proxy_estiver_configurado_deve_inlcuir_na_paylodad_de_acesso_ao_flaresolverr(self):
@@ -67,7 +65,8 @@ class TestTurnstileSolverClient(TestCase):
                 'maxTimeout': 60000,
                 'returnOnlyCookies': True,
                 'proxy': {'url': 'http://proxy.url:3128'}
-            }
+            },
+            timeout=60
         )
 
     def test_resolver__quando_sucesso_ao_solucionar_captcha_retorna_objeto_com_dados_da_sessao(self):

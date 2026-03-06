@@ -25,21 +25,20 @@ class TurnstileSolverClient:
     Attributes:
         URL_FLARESOLVER (str): Endpoint base da API do FlareSolverr, construído a
             partir da variável de configuração ``FLARESOLVERR_HOST``.
+        TIMEOUT (int): Tempo de espera máximo pela resposta da requisição HTTP realizada ao FlareSolverr.
     """
 
     URL_FLARESOLVERR = f'{FLARESOLVERR_HOST}/v1'
+    TIMEOUT = 60  # 1 minuto em segundos
 
-    def __init__(self, url_pagina_captcha: str, timeout: int = 120) -> None:
+    def __init__(self, url_pagina_captcha: str) -> None:
         """Inicializa o cliente com a URL do desafio e o tempo limite da requisição.
 
         Args:
             url_pagina_captcha (str): URL da página protegida pelo Turnstile que
                 o FlareSolverr deve acessar e resolver.
-            timeout (int): Tempo máximo, em segundos, aguardado pelo FlareSolverr
-                para resolver o desafio. Padrão: 120 segundos.
         """
         self._url_pagina_captcha = url_pagina_captcha
-        self._timeout = timeout
 
     def resolver(self) -> SolucaoAntigate:
         """Envia a requisição ao FlareSolverr e retorna uma sessão autenticada.
@@ -60,14 +59,14 @@ class TurnstileSolverClient:
         data = {
             'cmd': 'request.get',
             'url': self._url_pagina_captcha,
-            'maxTimeout': self._timeout * 1000,  # Transforma segundos em milissegundos
+            'maxTimeout': self.TIMEOUT * 1000,  # Transforma segundos em milissegundos
             'returnOnlyCookies': True
         }
 
         if https_proxy := os.environ.get('HTTPS_PROXY'):
             data.update({'proxy': {'url': https_proxy}})
 
-        response = requests.post(url=self.URL_FLARESOLVERR, headers=headers, json=data)
+        response = requests.post(url=self.URL_FLARESOLVERR, headers=headers, json=data, timeout=self.TIMEOUT)
         self._verificar_resposta(response)
         return self._criar_model_sessao(response)
 
