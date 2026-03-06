@@ -108,7 +108,7 @@ class TestClientSTJ(TestCase):
             },
             ClientSTJ.HEADERS_BASE
         )
-        self.assertEqual(60, ClientSTJ.TIMEOUT)
+        self.assertEqual(30, ClientSTJ.TIMEOUT)
 
     # Testes _recuperar_solucao_turnstile
     def test_recuperar_solucao_turnstile__obtem_solucao_do_storage_e_retorna(self):

@@ -50,7 +50,7 @@ class ClientSTJ:
         'Pragma': 'no-cache',
         'Cache-Control': 'no-cache',
     }
-    TIMEOUT = 60
+    TIMEOUT = 30
 
     def __init__(self, storage: Storage, numero_processo: str,) -> None:
         """Inicializa o cliente com o storage e o número do processo.
