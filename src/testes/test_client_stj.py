@@ -108,6 +108,7 @@ class TestClientSTJ(TestCase):
             },
             ClientSTJ.HEADERS_BASE
         )
+        self.assertEqual(60, ClientSTJ.TIMEOUT)
 
     # Testes _recuperar_solucao_turnstile
     def test_recuperar_solucao_turnstile__obtem_solucao_do_storage_e_retorna(self):
@@ -271,7 +272,7 @@ class TestClientSTJ(TestCase):
             self.cliente_stj._obter_sessao.assert_called_once_with(forcar_nova_solucao=False)
 
         mock_sessao.request.assert_called_once_with(
-            method='GET', url='https://url.com', data={'parametro': 'valor'}
+            method='GET', url='https://url.com', data={'parametro': 'valor'}, timeout=self.cliente_stj.TIMEOUT
         )
         self.assertIs(mock_response, resposta_obtida)
 
@@ -293,8 +294,14 @@ class TestClientSTJ(TestCase):
 
         self.assertEqual(
             [
-                mock.call(method='GET', url='https://url.com', data={'parametro': 'valor'}),
-                mock.call(method='GET', url='https://url.com', data={'parametro': 'valor'})
+                mock.call(
+                    method='GET', url='https://url.com', data={'parametro': 'valor'},
+                    timeout=self.cliente_stj.TIMEOUT
+                ),
+                mock.call(
+                    method='GET', url='https://url.com', data={'parametro': 'valor'},
+                    timeout=self.cliente_stj.TIMEOUT
+                ),
             ],
             mock_sessao.request.call_args_list
         )
@@ -315,7 +322,7 @@ class TestClientSTJ(TestCase):
             self.cliente_stj._obter_sessao.assert_called_once_with(forcar_nova_solucao=False)
 
         mock_sessao.request.assert_called_once_with(
-            method='GET', url='https://url.com', data={'parametro': 'valor'}
+            method='GET', url='https://url.com', data={'parametro': 'valor'}, timeout=self.cliente_stj.TIMEOUT
         )
 
     # Testes buscar_processo

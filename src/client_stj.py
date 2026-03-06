@@ -21,6 +21,8 @@ class ClientSTJ:
     Attributes:
         URL_BASE: URL base do sistema de pesquisa processual do STJ.
         HEADERS_BASE: Headers HTTP padrão enviados em todas as requisições.
+        TIMEOUT (int): Tempo máximo de espera em segundos pela resposta de uma
+            requisição HTTP realizada ao STJ.
 
     Example:
         with ClientSTJ(storage=storage, numero_processo='REsp 1234567') as client:
@@ -48,6 +50,7 @@ class ClientSTJ:
         'Pragma': 'no-cache',
         'Cache-Control': 'no-cache',
     }
+    TIMEOUT = 60
 
     def __init__(self, storage: Storage, numero_processo: str,) -> None:
         """Inicializa o cliente com o storage e o número do processo.
@@ -146,7 +149,7 @@ class ClientSTJ:
         """
         for forcar_nova_solucao in (False, True):
             requests_session: requests.Session = self._obter_sessao(forcar_nova_solucao=forcar_nova_solucao)
-            resposta = requests_session.request(method=method, url=url, data=data)
+            resposta = requests_session.request(method=method, url=url, data=data, timeout=self.TIMEOUT)
             if resposta.status_code != 403:
                 break
         resposta.raise_for_status()
