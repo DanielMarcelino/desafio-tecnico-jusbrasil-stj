@@ -23,7 +23,7 @@ pip install -r requirements/base.txt
 
 ### 2. Subir o FlareSolverr
 
-O FlareSolverr deve estar em execução antes de iniciar o crawler, pois é responsável por resolver o captcha Cloudflare Turnstile do STJ:
+O [FlareSolverr](https://github.com/FlareSolverr/FlareSolverr) deve estar em execução antes de iniciar o crawler, pois é responsável por resolver o captcha Cloudflare Turnstile do STJ:
 
 ```bash
 docker run \
@@ -68,7 +68,7 @@ coverage/index.html
 
 ## Visão geral
 
-O STJ utiliza proteção Cloudflare Turnstile para bloquear acesso automatizado. O crawler contorna essa proteção via **FlareSolverr**, que resolve o desafio e fornece os cookies e User-Agent necessários para autenticar as requisições. A solução obtida é armazenada em cache no storage local e reutilizada entre execuções para evitar resoluções desnecessárias, sendo renovada automaticamente quando expirada ou quando a requisição retorna HTTP 403.
+O STJ utiliza proteção Cloudflare Turnstile para bloquear acesso automatizado. O crawler contorna essa proteção via [**FlareSolverr**](https://github.com/FlareSolverr/FlareSolverr), que resolve o desafio e fornece os cookies e User-Agent necessários para autenticar as requisições. A solução obtida é armazenada em cache no storage local e reutilizada entre execuções para evitar resoluções desnecessárias, sendo renovada automaticamente quando expirada ou quando a requisição retorna HTTP 403.
 
 ---
 
@@ -136,7 +136,7 @@ CrawlerProcesso.buscar_processo()
 
 ### Autenticação via FlareSolverr
 
-O STJ protege o portal com Cloudflare Turnstile. O `TurnstileSolverClient` delega a resolução do desafio ao **FlareSolverr**, que retorna os cookies de sessão e o User-Agent necessários. Esses dados são injetados nos headers de todas as requisições via `requests.Session`.
+O STJ protege o portal com Cloudflare Turnstile. O `TurnstileSolverClient` delega a resolução do desafio ao [**FlareSolverr**](https://github.com/FlareSolverr/FlareSolverr), que retorna os cookies de sessão e o User-Agent necessários. Esses dados são injetados nos headers de todas as requisições via `requests.Session`.
 
 A solução é armazenada no storage e reutilizada enquanto válida. Em caso de bloqueio (HTTP 403), o cliente descarta a solução em cache, obtém uma nova e repete a requisição automaticamente — sem intervenção manual.
 
@@ -177,7 +177,7 @@ Como a extensão dos documentos só é conhecida após o download, a verificaç�
 
 ### Deduplicação de movimentos
 
-Ao atualizar um processo existente, os movimentos são convertidos em `set` e mesclados via `union`. A igualdade e o hash de `Movimento` são calculados com base em `numero`, `data` e `descricao`, garantindo que movimentos idênticos não sejam duplicados mesmo que apareçam em múltiplas execuções ou páginas.
+Ao atualizar um processo existente, os movimentos são convertidos em `set` e mesclados via `union`. A igualdade e o hash de `Movimento` são calculados com base na `data` e `descricao`, garantindo que movimentos idênticos não sejam duplicados mesmo que apareçam em múltiplas execuções ou páginas.
 
 ### Modelos Pydantic
 
