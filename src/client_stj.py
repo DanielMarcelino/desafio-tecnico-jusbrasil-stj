@@ -1,4 +1,5 @@
 import re
+import logging
 from typing import Generator
 
 import requests
@@ -68,6 +69,7 @@ class ClientSTJ:
         self._total_movimentos: int | None
         self._solucao_turnstile: SolucaoAntigate | None = None
         self._requests_session: requests.Session | None = None
+        self._logger = logging.getLogger(f"[{__name__}][{self.__class__.__name__}]")
 
     def __enter__(self) -> 'ClientSTJ':
         """Retorna a própria instância ao entrar no context manager."""
@@ -230,6 +232,7 @@ class ClientSTJ:
         Returns:
             Objeto `SolucaoAntigate` com a solução recém-obtida.
         """
+        self._logger.info('Resolvendo CAPTCHA Cloudflare Turnstile')
         resolvedor_turnstile = TurnstileSolverClient(url_pagina_captcha=self.URL_BASE)
         return resolvedor_turnstile.resolver()
 
