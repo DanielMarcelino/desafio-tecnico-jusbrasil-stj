@@ -3,6 +3,7 @@ import re
 
 from abc import ABC
 from datetime import datetime
+from functools import total_ordering
 from time import time
 from typing import Self, ClassVar
 
@@ -87,6 +88,7 @@ class Documento(BaseModel):
     path_arquivo: str | None = None
 
 
+@total_ordering
 class Movimento(BaseModel):
     """Representa um movimento (andamento) registrado no processo judicial.
 
@@ -110,7 +112,13 @@ class Movimento(BaseModel):
                 value.data,
                 value.descricao,
             )
-        return super().__eq__(value)
+        return NotImplemented
+
+    def __lt__(self, other):
+        """Compara se este movimento é anterior ao outro pela data."""
+        if isinstance(other, Movimento):
+            return self.data < other.data
+        return NotImplemented
 
     def __hash__(self) -> int:
         """Hash baseado na data e descricao para uso em sets e dicts."""
@@ -310,7 +318,8 @@ class Processo(BaseModel):
 
     Encapsula `DadosProcesso` e fornece métodos para criação, carregamento,
     atualização e persistência no storage. Na atualização, movimentos existentes
-    e novos são mesclados e deduplicados via `set`, preservando o histórico completo.
+    e novos são mesclados e deduplicados via `set`, ordenados pela ordem decrescente das datas,
+    preservando o histórico completo.
 
     Attributes:
         PATH_ARQUIVO: Padrão do caminho do arquivo no storage, parametrizado
@@ -332,7 +341,7 @@ class Processo(BaseModel):
         Returns:
             Nova instância de `Processo` com movimentos em ordem decrescente de data.
         """
-        dados.movimentos = cls._ordena_movimentos(dados.movimentos)
+        dados.movimentos = sorted(dados.movimentos, reverse=True)
         return Processo(dados=dados)
 
     @classmethod
@@ -370,7 +379,7 @@ class Processo(BaseModel):
         movimentos_carregados: set[Movimento] = set(self.dados.movimentos)
         movimentos_atualizados: set[Movimento] = set(dados.movimentos)
         movimentos_mesclados: set[Movimento] = movimentos_carregados.union(movimentos_atualizados)
-        dados.movimentos = self._ordena_movimentos(movimentos_mesclados)
+        dados.movimentos = sorted(movimentos_mesclados, reverse=True)
         self.dados = dados
 
     def salvar(self, storage: Storage) -> None:
@@ -385,18 +394,6 @@ class Processo(BaseModel):
         path_arquivo = self.PATH_ARQUIVO.format(id_processo=self.id_processo)
         content = self.model_dump_json().encode()
         storage.salvar_arquivo(path_arquivo=path_arquivo, content=content)
-
-    @classmethod
-    def _ordena_movimentos(cls, movimentos: list[Movimento] | set[Movimento]) -> list[Movimento]:
-        """Ordena os movimentos por data em ordem decrescente.
-
-        Args:
-            movimentos: Lista ou conjunto de movimentos a ordenar.
-
-        Returns:
-            Lista de movimentos ordenada do mais recente para o mais antigo.
-        """
-        return sorted(movimentos, key=lambda m: m.data, reverse=True)
 
     @property
     def id_processo(self) -> str:

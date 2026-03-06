@@ -257,7 +257,7 @@ class Parser:
                 descricao=texto,
                 documentos=self._extrair_documentos_movimento(linha)
             ))
-        return movimentos
+        return sorted(movimentos, reverse=True)
 
     def extrair_quantidade_total_movimentos(self, html: str) -> int | None:
         """Extrai o total de movimentos registrados no processo.
