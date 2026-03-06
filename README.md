@@ -173,6 +173,12 @@ O download de documentos é realizado de forma **assíncrona** via `asyncio`, co
 
 ## Tratamento de erros e validações
 
+### Testes de integração do `Parser`
+Testes de parsing com HTML fixado em fixtures com HTMLs representativos do STJ foram implementados para validar a extração end-to-end sem depender de requisições reais.
+
+### Testes do `ClientSTJ`
+Respostas HTTP foram mockadas para verificar o comportamento de retry, renovação de sessão e paginação de forma isolada.
+
 ### Retry com backoff exponencial
 
 O download de documentos utiliza **Tenacity** com a seguinte configuração:
@@ -183,6 +189,10 @@ O download de documentos utiliza **Tenacity** com a seguinte configuração:
 - Relança a exceção original após esgotamento das tentativas
 
 O `ClientSTJ` implementa retry manual em caso de HTTP 403, forçando a renovação da sessão Turnstile antes da segunda tentativa.
+
+### Timeout nas requisições
+
+Todas as requisições HTTP definem timeout explícito, evitando travamentos indefinidos em caso de lentidão ou indisponibilidade do servidor
 
 ### Validação de respostas
 
@@ -223,10 +233,6 @@ local_storage/
 
 
 ## Possíveis melhorias
-
-### Resiliência e confiabilidade
-
-- **Timeout nas requisições** — as chamadas `requests.get` e `session.request` não definem timeout explícito, o que pode causar travamentos indefinidos em caso de lentidão do servidor. Adicionar `timeout` como parâmetro configurável evitaria esse cenário.
 
 ### Manutenibilidade
 
