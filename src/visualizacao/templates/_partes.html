@@ -16,7 +16,7 @@
                 <div class="col-12 mb-2 border rounded p-3">
                 {% for advogado in processo.dados.advogados %}
                     <div class="col-12 mb-2">
-                        <b>{{ advogado.nome }}</b> <span class="badge text-bg-secondary">OAB: {{ advogado.oab }}</span>
+                        {{ advogado.nome }} <span class="badge text-bg-secondary">OAB: {{ advogado.oab }}</span>
                     </div>
                 {% endfor %}
                 </div>
