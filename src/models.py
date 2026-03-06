@@ -337,7 +337,7 @@ class DadosProcesso(BaseModel):
             'Assuntos': ', '.join(d.assuntos),
             'Tribunal de Origem': d.tribunal_origem,
             'Volume': d.volume_apenso,
-            'Números e Origem': ', '.join(d.numeros_de_origem),
+            'Números de Origem': ', '.join(d.numeros_de_origem),
         }
 
 
