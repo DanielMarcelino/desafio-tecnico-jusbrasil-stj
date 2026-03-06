@@ -1,4 +1,4 @@
-# Crawler STJ
+# Crawler de processos do STJ
 
 Crawler para extração automatizada de dados de processos judiciais do [Superior Tribunal de Justiça (STJ)](https://processo.stj.jus.br/processo/pesquisa/). O projeto realiza a busca, parsing, persistência e download de documentos de processos, com suporte a paginação, resolução de captcha e download assíncrono de arquivos.
 
