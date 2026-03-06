@@ -65,7 +65,7 @@ class TurnstileSolverClient:
         }
 
         if https_proxy := os.environ.get('HTTPS_PROXY'):
-            data.update({'proxy': {'url': os.environ.get('HTTPS_PROXY', https_proxy)}})
+            data.update({'proxy': {'url': https_proxy}})
 
         response = requests.post(url=self.URL_FLARESOLVERR, headers=headers, json=data)
         self._verificar_resposta(response)
