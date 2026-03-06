@@ -327,7 +327,7 @@ class ClientSTJ:
         elif self._is_reg_stj(self._numero_processo):
             parametros['num_registro'] = self._numero_processo
         else:
-            raise ValueError('Tipo de número de processo inesperado!')
+            raise ValueError('Número de processo inesperado!')
         return parametros
 
     def _is_cnj(self, mumero_processo: str) -> bool:
@@ -339,7 +339,7 @@ class ClientSTJ:
         Returns:
             `True` se o número corresponder ao padrão CNJ, `False` caso contrário.
         """
-        regex_cnj = r'(\d{7})-?(\d{2})\.?(\d{4})\.?(\d)\.?(\d{2})\.?(\d{4})'
+        regex_cnj = r'\A\d{7}-?\d{2}\.?\d{4}\.?\d\.?\d{2}\.?\d{4}\Z'
         return bool(re.match(regex_cnj, mumero_processo))
 
     def _is_proc_stj(self, mumero_processo: str) -> bool:
@@ -351,7 +351,7 @@ class ClientSTJ:
         Returns:
             `True` se o número corresponder ao padrão STJ, `False` caso contrário.
         """
-        regex_numero_processo_stj = r'[A-z]+ *\d+'
+        regex_numero_processo_stj = r'\A[A-z]+ *\d+\Z'
         return bool(re.match(regex_numero_processo_stj, mumero_processo))
 
     def _is_reg_stj(self, mumero_processo: str) -> bool:
@@ -365,5 +365,5 @@ class ClientSTJ:
             `True` se o número corresponder ao padrão de registro STJ,
             `False` caso contrário.
         """
-        regex_registro_stj = r'\d{4}/?\d+-?\d+'
+        regex_registro_stj = r'\A\d{4}/?\d+-?\d+\Z'
         return bool(re.match(regex_registro_stj, mumero_processo))
