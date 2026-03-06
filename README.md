@@ -32,7 +32,7 @@ docker run \
   -p 8191:8191 \
   -e LOG_LEVEL=info \
   -e LANG="pt_BR" \
-  -e "America/Sao_Paulo" \
+  -e TZ="America/Sao_Paulo" \
   --restart unless-stopped \
   ghcr.io/flaresolverr/flaresolverr:latest
 
